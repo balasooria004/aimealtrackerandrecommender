@@ -1,0 +1,12 @@
+<h2>TDEE Split Result</h2>
+<p><strong>TDEE:</strong> {{ tdee }} kcal</p>
+
+<h3>Raw Response:</h3>
+<pre>{{ response }}</pre>
+
+<h3>Parsed Calorie Split (JSON):</h3>
+<ul>
+  {% for meal, kcal in calorie_split.items %}
+    <li><strong>{{ meal }}:</strong> {{ kcal }} kcal</li>
+  {% endfor %}
+</ul>

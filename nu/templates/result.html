@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Nutrition Plan</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .nutrition-info {
+            margin: 20px 0;
+        }
+        .nutrition-info div {
+            margin: 10px 0;
+        }
+        #chart-container {
+            width: 60%;
+            margin: 30px auto;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Your Daily Nutrition Plan</h1>
+
+    <div class="nutrition-info">
+        <div><strong>Calories:</strong> {{ tdee }} kcal</div>
+        <div><strong>Protein:</strong> {{ protein }} g</div>
+        <div><strong>Fat:</strong> {{ fat }} g</div>
+        <div><strong>Carbs:</strong> {{ carbs }} g</div>
+        <div><strong>Fiber:</strong> {{ fiber }} g</div>
+    </div>
+
+    <div id="chart-container">
+        <canvas id="macroChart"></canvas>
+    </div>
+
+    <a href="{% url 'home' %}">Go Back Home</a>
+
+    <!-- Safely pass data to JS using JSON -->
+    <script>
+        // This assumes you passed these variables as numbers from your Django view
+        const macroData = JSON.parse('{{ macro_data_json|safe }}');
+
+    </script>
+    <script>
+        const ctx = document.getElementById('macroChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Protein', 'Fat', 'Carbs', 'Fiber'],
+                datasets: [{
+                    label: 'Grams per Day',
+                    data: [
+                        macroData.protein,
+                        macroData.fat,
+                        macroData.carbs,
+                        macroData.fiber
+                    ],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Macronutrient Breakdown'
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

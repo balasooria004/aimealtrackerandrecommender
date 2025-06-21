@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Calories - CalTracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Example Foods */
+        .example-foods {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease 0.3s both;
+            margin-bottom: 2rem;
+        }
+
+        .example-title {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .example-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            font-size: 0.9rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .example-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Nutrition Checker Form */
+        .nutrition-checker {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease 0.2s both;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e0e6ed;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            text-align: center;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease 0.4s both;
+            margin-top: 2rem;
+        }
+
+        .results-title {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .results-content {
+            line-height: 1.8;
+            color: #555;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            white-space: pre-line;
+            font-size: 1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .nutrition-checker {
+                padding: 2rem;
+            }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-input {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                🍽️ CalTracker
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'check_calories' %}" class="active">Check Calories</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Instant Nutrition Checker 🍽️</h1>
+            <p class="hero-subtitle">Get detailed nutritional information for any food item instantly</p>
+        </div>
+
+        <!-- Example Foods -->
+        <div class="example-foods">
+            <h3 class="example-title">💡 Click on any example to try:</h3>
+            <div class="example-grid">
+                <div class="example-item">Apple 100g</div>
+                <div class="example-item">Chicken breast 150g</div>
+                <div class="example-item">Rice 1 cup</div>
+                <div class="example-item">Banana 1 medium</div>
+                <div class="example-item">Salmon 200g</div>
+                <div class="example-item">Oatmeal 1 cup</div>
+                <div class="example-item">Broccoli 100g</div>
+                <div class="example-item">Greek yogurt 1 cup</div>
+            </div>
+        </div>
+
+        <!-- Nutrition Checker Form -->
+        <div class="nutrition-checker">
+            <form method="post" id="nutrition-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="food_input" class="form-label">Enter Food Item & Quantity</label>
+                    <input 
+                        type="text" 
+                        name="food_input" 
+                        id="food_input"
+                        class="form-input"
+                        placeholder="e.g., Apple 100g, Chicken breast 150g, Rice 1 cup"
+                        value="{{ request.POST.food_input|default:'' }}"
+                        required
+                    >
+                </div>
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    🔍 Get Nutrition Info
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if nutrition_data %}
+            <div class="results-section">
+                <h2 class="results-title">📊 Nutrition Information</h2>
+                <div class="results-content">{{ nutrition_data }}</div>
+            </div>
+        {% elif request.method == 'POST' %}
+            <div class="results-section">
+                <h2 class="results-title">⚠️ No Results</h2>
+                <div class="no-results">
+                    Please enter a valid food item and try again.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for example foods
+            document.querySelectorAll('.example-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.getElementById('food_input').value = this.textContent;
+                    document.getElementById('food_input').focus();
+                });
+            });
+            
+            // Add loading state to submit button
+            document.getElementById('nutrition-form').addEventListener('submit', function(e) {
+                const submitBtn = document.getElementById('submit-btn');
+                const foodInput = document.getElementById('food_input');
+                
+                if (foodInput.value.trim() === '') {
+                    e.preventDefault();
+                    foodInput.focus();
+                    return;
+                }
+                
+                submitBtn.innerHTML = '⏳ Analyzing Nutrition...';
+                submitBtn.disabled = true;
+            });
+            
+            // Auto-focus on input field
+            document.getElementById('food_input').focus();
+        });
+    </script>
+</body>
+</html>
